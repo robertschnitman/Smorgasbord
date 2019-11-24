@@ -1,0 +1,1 @@
+tabledf <- function(...) as.data.frame(table(...))
