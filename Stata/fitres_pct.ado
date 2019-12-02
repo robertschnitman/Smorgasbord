@@ -4,7 +4,7 @@ program define fitres_pct, eclass byable(onecall)
 
 end
 
-/* example (assumes res_pct.ado)
+/* example (assumes fr.ado)
 use "C:\Program Files (x86)\Stata12\ado\base\a\auto.dta", clear
 
 reg price mpg
