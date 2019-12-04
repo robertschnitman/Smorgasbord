@@ -1,0 +1,74 @@
+---
+title: "2019-04-13 Static Dashboard Test"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(flexdashboard)
+library(plotly)
+# devtools::install_github('bbc/bbplot')
+library(bbplot)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### MPG vs Weight
+
+```{r}
+sc <- ggplot(mtcars, aes(y = mpg, x = wt, size = hp)) + 
+  geom_point(col = 'cyan3') + 
+  labs(y = 'MPG', 
+      x = 'Weight', 
+      title = 'MPG vs. Weight', 
+      subtitle = 'Larger points indicate higher horsepower.') +
+  theme_minimal() +
+  bbc_style()
+
+ggplotly(sc)
+#sc
+
+
+# y_ticks <- with(mtcars, c(floor(min(mpg)), ceiling(max(mpg))))
+#y_ticks <- with(mtcars, c(floor(min(mpg)), 35))
+#x_ticks <- with(mtcars, c(floor(min(wt)), ceiling(max(wt))))
+#with(mtcars, plot(mpg ~ wt, col = 'cyan4', frame.plot = FALSE, ylim = y_ticks, xlim = x_ticks))
+# with(mtcars, plot(mpg ~ wt, col = 'cyan4', frame.plot = FALSE, ylim = y_ticks))
+# axis(side = 1, pos = min(y_ticks), lwd.ticks = 0) # https://stackoverflow.com/questions/22470114/removing-top-and-right-borders-from-boxplot-frame-in-r?rq=1
+#axis(side = 1, lwd.ticks = 0) # https://stackoverflow.com/questions/22470114/removing-top-and-right-borders-from-boxplot-frame-in-r?rq=1
+# abline(h = min(y_ticks), col = 'black')
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+```{r include = FALSE}
+agg_spread <- function(...) {
+  
+  agg <- aggregate(...)
+
+  out <- tidyr::spread(agg, 2, 3)
+  
+  out
+  
+}
+```
+
+### Average MPG by Transmission and Number of Gears
+
+```{r}
+agg1 <- agg_spread(mpg ~ am + gear, mtcars, mean)
+knitr::kable(agg1)
+```
+
+### Average Weight by Transmission and Gears
+
+```{r}
+agg2 <- agg_spread(wt ~ am + gear, mtcars, mean)
+knitr::kable(agg2)
+```
+
